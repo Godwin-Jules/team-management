@@ -12,7 +12,7 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 export const getTeamByCode = async (args: {
   where: any;
 }): Promise<Team | null> => {
-  return prismaClt.team.findUnique(args);
+  return await prismaClt.team.findUnique(args);
 };
 
 export const getTotalUser = async (): Promise<number> => {
@@ -37,5 +37,12 @@ export const createUser = async (
     include: {
       team: true,
     },
+  });
+};
+
+export const getUser = async (email: string): Promise<any | null> => {
+  return await prismaClt.user.findUnique({
+    where: { email: email },
+    include: { team: true },
   });
 };
