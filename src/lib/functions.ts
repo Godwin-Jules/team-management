@@ -1,4 +1,4 @@
-import { Team } from "@/prisma";
+import { Prisma, Team, User } from "@/prisma";
 import { prismaClt } from "./prisma";
 import { Role } from "@/types";
 
@@ -44,5 +44,17 @@ export const getUser = async (email: string): Promise<any | null> => {
   return await prismaClt.user.findUnique({
     where: { email: email },
     include: { team: true },
+  });
+};
+
+export const getUsers = async (
+  whereArgs: Prisma.UserWhereInput,
+  selectArgs?: Prisma.UserSelect,
+  orderArgs?: Prisma.UserOrderByWithRelationInput,
+): Promise<User[]> => {
+  return await prismaClt.user.findMany({
+    where: whereArgs,
+    select: selectArgs,
+    orderBy: orderArgs,
   });
 };
