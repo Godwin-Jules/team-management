@@ -58,3 +58,11 @@ export const getUsers = async (
     orderBy: orderArgs,
   });
 };
+
+export const updateUser = async (
+  where: any,
+  data: any,
+  includeArgs?: any,
+): Promise<User> => {
+  return await prismaClt.user.update({ where, data, include: includeArgs });
+};
