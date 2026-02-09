@@ -1,4 +1,4 @@
-import "dotenv";
+import "dotenv/config";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
