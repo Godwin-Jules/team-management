@@ -10,7 +10,6 @@ interface HeaderProps {
 
 export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
-  const isUser = false;
   const navigation = [
     { name: "Home", href: "/", show: true },
     { name: "Dashboard", href: "/dashboard", show: true },
@@ -54,10 +53,10 @@ export default function Header({ user }: HeaderProps) {
           </nav>
           {/* User Info */}
           <div className="flex items-center space-x-4">
-            {isUser ? (
+            {user ? (
               <>
                 <span className="text-sm text-slate-300">
-                  Dieu donné - ADMIN
+                  {user.name} - {user.role}
                 </span>
                 <button
                   // onClick={}
