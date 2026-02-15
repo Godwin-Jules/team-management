@@ -1,14 +1,11 @@
 "use client";
 
-import { User } from "@/types";
+import { useAuth } from "@/provider/authProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-interface HeaderProps {
-  user: User | null;
-}
-
-export default function Header({ user }: HeaderProps) {
+export default function Header() {
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   const navigation = [
     { name: "Home", href: "/", show: true },
@@ -59,8 +56,8 @@ export default function Header({ user }: HeaderProps) {
                   {user.name} - {user.role}
                 </span>
                 <button
-                  // onClick={}
-                  className="px-3 py-2 bg-red-500 text-white text-sm rounded"
+                  onClick={logout}
+                  className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
                 >
                   Logout
                 </button>

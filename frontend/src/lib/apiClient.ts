@@ -25,7 +25,10 @@ class ApiClient {
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: "Request failed" }));
+      const error = await response
+        .json()
+        .catch(() => ({ error: "Request failed" }));
+
       throw new Error(error.error || "Request failed");
     }
 
@@ -38,15 +41,15 @@ class ApiClient {
   async register(userData: unknown) {
     return this.request("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ userData })
-    })
+      body: JSON.stringify(userData),
+    });
   }
 
   async login(email: string, password: string) {
     return this.request("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({ email, password })
-    })
+      body: JSON.stringify({ email, password }),
+    });
   }
 
   async logout() {
@@ -58,20 +61,21 @@ class ApiClient {
   async getCurrentUser() {
     return this.request("/api/auth/me");
   }
+
   // User Methods
   async getUsers() {
     return this.request("/api/users");
   }
 
   async updateUserRole(userId: string, role: string) {
-    return this.request(`api/user/${userId}/role`, {
+    return this.request(`/api/user/${userId}/role`, {
       method: "PATCH",
       body: JSON.stringify({ role })
     });
   }
 
   async assignUserToTeam(userId: string, teamId: string) {
-    return this.request(`api/user/${userId}/team`, {
+    return this.request(`/api/user/${userId}/team`, {
       method: "PATCH",
       body: JSON.stringify({ teamId })
     });
