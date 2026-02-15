@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const { name, email, password, teamCode } = await request.json();
+    console.error("data:", name, email, password, teamCode);
 
     // Validate required fields
     if (!name || !email || !password) {
