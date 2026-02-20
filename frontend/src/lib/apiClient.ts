@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 class ApiClient {
   private baseUrl: string;
@@ -12,16 +12,16 @@ class ApiClient {
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
-
       },
-      credentials: "include",  //important for cookies
+      credentials: "include", //important for cookies
       ...options,
-    }
+    };
     const response = await fetch(url, config);
 
     // Handle 401 (unauthorized) gracefully
     if (response.status === 401) {
-      return null;
+      const data = await response.json();
+      throw new Error(data.error);
     }
 
     if (!response.ok) {
@@ -63,24 +63,37 @@ class ApiClient {
   }
 
   // User Methods
-  async getUsers() {
-    return this.request("/api/users");
+  async getUsers({
+    teamId,
+    role,
+    crossTeam,
+  }: {
+    teamId?: string;
+    role?: string;
+    crossTeam?: boolean;
+  }) {
+    return this.request(
+      `/api/user?teamId=${teamId ?? ""}&role=${role ?? ""}&crossTeam=${crossTeam ?? true}`,
+    );
   }
 
   async updateUserRole(userId: string, role: string) {
     return this.request(`/api/user/${userId}/role`, {
       method: "PATCH",
-      body: JSON.stringify({ role })
+      body: JSON.stringify({ role }),
     });
   }
 
   async assignUserToTeam(userId: string, teamId: string) {
     return this.request(`/api/user/${userId}/team`, {
       method: "PATCH",
-      body: JSON.stringify({ teamId })
+      body: JSON.stringify({ teamId }),
     });
   }
   // Admin Methods
+  async getTeams() {
+    return this.request("/api/team");
+  }
 }
 
 export const apiClient = new ApiClient();
