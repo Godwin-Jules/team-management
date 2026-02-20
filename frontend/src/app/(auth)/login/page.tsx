@@ -1,7 +1,9 @@
 "use client";
 
+import { apiClient } from "@/lib/apiClient";
 import { useAuth } from "@/provider/authProvider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
 export type LoginState = {
@@ -10,13 +12,14 @@ export type LoginState = {
 };
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { user, login } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     }
-  }, [user]);
+  }, [user, router]);
 
   const [state, loginAction, isPending] = useActionState(
     async (prevState: LoginState, formData: FormData): Promise<LoginState> => {
@@ -24,6 +27,7 @@ export default function LoginPage() {
         await login(formData);
         return { success: true };
       } catch (error) {
+        console.error("Login attempt failed:", error);
         return {
           error: error instanceof Error ? error.message : "Login failed",
         };
