@@ -19,14 +19,21 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const teamId = searchParams.get("teamId");
     const role = searchParams.get("role");
+    const crossTeam = searchParams.get("crossTeam");
 
     // build where clause based on user role
     const where: Prisma.UserWhereInput = {};
     if (user.role === Role.ADMIN) {
       // can see all users
     } else if (user.role === Role.MANAGER) {
-      // can see users in their team  or cross team users but not cross team managers
-      where.OR = [{ teamId: user.teamId }, { role: Role.USER }];
+      if (crossTeam === "false") {
+        where.role = {
+          not: Role.ADMIN,
+        };
+      } else {
+        // can see users in their team  or cross team users but not cross team managers
+        where.OR = [{ teamId: user.teamId }, { role: Role.USER }];
+      }
     } else {
       // only see users in their team
       where.teamId = user.teamId;
@@ -49,7 +56,7 @@ export async function GET(request: NextRequest) {
         email: true,
         name: true,
         role: true,
-        team: { select: { id: true, name: true } },
+        team: true,
         createdAt: true,
         updatedAt: true,
       },
