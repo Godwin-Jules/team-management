@@ -2,6 +2,7 @@
 
 import { apiClient } from "@/lib/apiClient";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 export type RegisterState = {
@@ -10,6 +11,7 @@ export type RegisterState = {
 };
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [state, registerAction, isPending] = useActionState(
     async (prevState: RegisterState, formData: any): Promise<RegisterState> => {
       const name = formData.get("name") as string;
@@ -24,7 +26,7 @@ export default function RegisterPage() {
           password,
           teamCode,
         });
-        window.location.href = "/dashboard";
+        router.push("/login");
         return { success: true };
       } catch (error) {
         return {

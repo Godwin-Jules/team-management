@@ -21,24 +21,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   // React 19 useActionState for login
-  const [loginState, loginAction, isLoginPending] = useActionState(
-    async (prevState: LoginState, formData: FormData): Promise<LoginState> => {
-      const email = formData.get("email") as string;
-      const password = formData.get("password") as string;
+  const login = async (formData: FormData): Promise<void> => {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-      try {
-        const data = await apiClient.login(email, password);
-        setUser(data.user);
-        return { success: true, user: data.user };
-      } catch (error) {
-        console.error("Error:", error);
-        return {
-          error: error instanceof Error ? error.message : "Login failed",
-        };
-      }
-    },
-    { error: undefined, success: undefined, user: undefined } as LoginState,
-  );
+    try {
+      const data = await apiClient.login(email, password);
+      setUser(data.user);
+      console.log({ success: true, user: data.user });
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
 
   const logout = async () => {
     try {
@@ -82,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        login: loginAction,
+        login,
         logout,
         hasPermission,
       }}

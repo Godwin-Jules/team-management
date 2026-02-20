@@ -28,7 +28,7 @@ export interface Team {
 
 export interface AuthContextType {
   user: User | null;
-  login: (formData: FormData) => void;
+  login: (formData: FormData) => Promise<void>;
   logout: () => void;
   hasPermission: (requiredRole: Role) => boolean;
 }
